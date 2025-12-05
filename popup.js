@@ -15,7 +15,6 @@ const playerSymbolEl = document.getElementById("playerSymbol");
 const turnStatus = document.getElementById("turnStatus");
 const gameOverButtons = document.getElementById("gameOverButtons");
 const rematchBtn = document.getElementById("rematchBtn");
-const menuBtn = document.getElementById("menuBtn");
 
 let rematchRequested = false;
 let currentRoomId = null;
@@ -25,7 +24,6 @@ function init() {
   playBtn.addEventListener("click", findMatch);
   backBtn.addEventListener("click", backToMenu);
   rematchBtn.addEventListener("click", requestRematch);
-  menuBtn.addEventListener("click", backToMenu);
 }
 
 // Connect to server and find match
@@ -63,9 +61,8 @@ function findMatch() {
     gameContainer.classList.remove("hidden");
     gameContainer.classList.add("visible");
 
-    // Hide game over buttons, show back button
+    // Hide game over buttons
     gameOverButtons.classList.add("hidden");
-    backBtn.classList.remove("hidden");
 
     // Update UI
     playerSymbolEl.textContent = `You are: ${playerSymbol}`;
@@ -97,8 +94,7 @@ function findMatch() {
     const cells = document.querySelectorAll(".cell");
     cells.forEach(cell => cell.classList.add("disabled"));
 
-    // Show rematch buttons, hide back button
-    backBtn.classList.add("hidden");
+    // Show game over buttons
     gameOverButtons.classList.remove("hidden");
     rematchBtn.textContent = "Rematch";
     rematchBtn.disabled = false;
@@ -144,9 +140,12 @@ function findMatch() {
     gameActive = true;
     rematchRequested = false;
 
-    // Hide game over buttons, show back button
+    // Hide game over buttons
     gameOverButtons.classList.add("hidden");
-    backBtn.classList.remove("hidden");
+
+    // Reset rematch button state
+    rematchBtn.textContent = "Rematch";
+    rematchBtn.disabled = false;
 
     // Update UI
     playerSymbolEl.textContent = `You are: ${playerSymbol}`;

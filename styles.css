@@ -130,13 +130,19 @@ h1 {
 }
 
 #gameOverButtons {
-  display: flex;
+  display: none;
   gap: 10px;
   justify-content: center;
   margin-top: 20px;
 }
 
+#gameOverButtons:not(.hidden) {
+  display: flex;
+}
+
 #gameOverButtons button {
   flex: 1;
-  max-width: 150px;
+  margin-top: 0;
+  padding: 15px 30px;
+  font-size: 16px;
 }
