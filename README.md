@@ -6,6 +6,7 @@ Chrome extension for instant multiplayer games - click and play against real opp
 - **Instant Matchmaking**: Click "Play" to instantly match with another player
 - **Real-time Multiplayer**: WebSocket-based gameplay with live updates
 - **Tic Tac Toe**: Turn-based game with automatic turn validation
+- **Rematch System**: Play multiple rounds with the same opponent
 - **No Login Required**: Anonymous multiplayer gaming
 
 ## Tech Stack
