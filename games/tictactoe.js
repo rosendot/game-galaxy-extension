@@ -21,6 +21,7 @@ function initializeBoard() {
 // Render board state
 function renderBoard(board) {
   const cells = document.querySelectorAll(".cell");
+  const isMyTurn = currentTurn === playerSymbol;
 
   let index = 0;
   for (let row = 0; row < 3; row++) {
@@ -30,8 +31,8 @@ function renderBoard(board) {
 
       cell.textContent = value || "";
 
-      // Disable cells that are filled
-      if (value) {
+      // Disable cells that are filled OR if it's not player's turn
+      if (value || !isMyTurn) {
         cell.classList.add("disabled");
       } else {
         cell.classList.remove("disabled");
