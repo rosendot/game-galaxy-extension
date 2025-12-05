@@ -94,6 +94,16 @@ function findMatch() {
   socket.on("disconnect", () => {
     console.log("Disconnected from server");
   });
+
+  socket.on("connect_error", (error) => {
+    console.error("Connection error:", error);
+    status.textContent = "Connection failed. Server might be deploying...";
+  });
+
+  socket.on("connect_timeout", () => {
+    console.error("Connection timeout");
+    status.textContent = "Connection timeout. Please try again.";
+  });
 }
 
 // Update turn status text
