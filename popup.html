@@ -1,11 +1,33 @@
-<!-- Popup UI placeholder -->
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <title>Game Galaxy</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Game Galaxy popup content will go here -->
+  <div id="app">
+    <h1>Game Galaxy</h1>
+
+    <div id="menu" class="visible">
+      <button id="playBtn" class="primary-btn">Play Tic Tac Toe</button>
+      <div id="status">Ready to play!</div>
+    </div>
+
+    <div id="gameContainer" class="hidden">
+      <div id="gameInfo">
+        <div id="playerSymbol"></div>
+        <div id="turnStatus"></div>
+      </div>
+
+      <div id="board"></div>
+
+      <button id="backBtn" class="secondary-btn">Back to Menu</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="games/tictactoe.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
