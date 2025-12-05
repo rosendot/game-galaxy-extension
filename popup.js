@@ -22,17 +22,22 @@ function init() {
 
 // Connect to server and find match
 function findMatch() {
+  console.log("🚀 Attempting to connect to:", SERVER_URL);
   status.textContent = "Connecting to server...";
 
-  socket = io(SERVER_URL);
+  socket = io(SERVER_URL, {
+    transports: ['websocket', 'polling']
+  });
 
   socket.on("connect", () => {
-    console.log("Connected to server");
+    console.log("✅ Connected to server! Socket ID:", socket.id);
     status.textContent = "Finding opponent...";
+    console.log("📤 Emitting find_match event");
     socket.emit("find_match");
   });
 
   socket.on("waiting", (data) => {
+    console.log("⏳ Waiting for opponent:", data);
     status.textContent = data.message;
   });
 
@@ -96,14 +101,17 @@ function findMatch() {
   });
 
   socket.on("connect_error", (error) => {
-    console.error("Connection error:", error);
+    console.error("❌ Connection error:", error);
+    console.error("Error details:", error.message, error.description);
     status.textContent = "Connection failed. Server might be deploying...";
   });
 
   socket.on("connect_timeout", () => {
-    console.error("Connection timeout");
+    console.error("⏱️ Connection timeout");
     status.textContent = "Connection timeout. Please try again.";
   });
+
+  console.log("✅ All event listeners registered");
 }
 
 // Update turn status text
