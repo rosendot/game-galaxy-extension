@@ -13,11 +13,19 @@ const backBtn = document.getElementById("backBtn");
 const status = document.getElementById("status");
 const playerSymbolEl = document.getElementById("playerSymbol");
 const turnStatus = document.getElementById("turnStatus");
+const gameOverButtons = document.getElementById("gameOverButtons");
+const rematchBtn = document.getElementById("rematchBtn");
+const menuBtn = document.getElementById("menuBtn");
+
+let rematchRequested = false;
+let currentRoomId = null;
 
 // Initialize
 function init() {
   playBtn.addEventListener("click", findMatch);
   backBtn.addEventListener("click", backToMenu);
+  rematchBtn.addEventListener("click", requestRematch);
+  menuBtn.addEventListener("click", backToMenu);
 }
 
 // Connect to server and find match
@@ -46,12 +54,18 @@ function findMatch() {
     playerSymbol = data.symbol;
     currentTurn = "X";
     gameActive = true;
+    currentRoomId = data.roomId;
+    rematchRequested = false;
 
     // Switch to game view
     menu.classList.remove("visible");
     menu.classList.add("hidden");
     gameContainer.classList.remove("hidden");
     gameContainer.classList.add("visible");
+
+    // Hide game over buttons, show back button
+    gameOverButtons.classList.add("hidden");
+    backBtn.classList.remove("hidden");
 
     // Update UI
     playerSymbolEl.textContent = `You are: ${playerSymbol}`;
@@ -82,6 +96,12 @@ function findMatch() {
     // Disable board
     const cells = document.querySelectorAll(".cell");
     cells.forEach(cell => cell.classList.add("disabled"));
+
+    // Show rematch buttons, hide back button
+    backBtn.classList.add("hidden");
+    gameOverButtons.classList.remove("hidden");
+    rematchBtn.textContent = "Rematch";
+    rematchBtn.disabled = false;
   });
 
   socket.on("opponent_disconnected", () => {
@@ -109,6 +129,31 @@ function findMatch() {
   socket.on("connect_timeout", () => {
     console.error("⏱️ Connection timeout");
     status.textContent = "Connection timeout. Please try again.";
+  });
+
+  socket.on("rematch_requested", () => {
+    console.log("Opponent requested rematch");
+    rematchBtn.textContent = "Accept Rematch?";
+    rematchBtn.disabled = false;
+  });
+
+  socket.on("rematch_accepted", (data) => {
+    console.log("Rematch accepted, restarting game");
+    playerSymbol = data.symbol;
+    currentTurn = "X";
+    gameActive = true;
+    rematchRequested = false;
+
+    // Hide game over buttons, show back button
+    gameOverButtons.classList.add("hidden");
+    backBtn.classList.remove("hidden");
+
+    // Update UI
+    playerSymbolEl.textContent = `You are: ${playerSymbol}`;
+    updateTurnStatus();
+
+    // Reset board
+    initializeBoard();
   });
 
   console.log("✅ All event listeners registered");
@@ -142,6 +187,17 @@ function backToMenu() {
   // Clear board
   const boardEl = document.getElementById("board");
   boardEl.innerHTML = "";
+}
+
+// Request rematch
+function requestRematch() {
+  if (!socket || !currentRoomId) return;
+
+  rematchBtn.disabled = true;
+  rematchBtn.textContent = "Waiting for opponent...";
+  rematchRequested = true;
+
+  socket.emit("request_rematch", { roomId: currentRoomId });
 }
 
 // Start when popup opens
